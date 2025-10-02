@@ -39,4 +39,6 @@ public class ValidationAuxilier {
         return storage > 0;
     }
 
+    public static boolean isStorageGreaterThanAmount(double storage, double amount){ return storage > amount; }
+
 }

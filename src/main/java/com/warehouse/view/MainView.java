@@ -1,9 +1,7 @@
 package com.warehouse.view;
 
-import com.warehouse.model.Material;
-import com.warehouse.model.NoteEntrance;
-import com.warehouse.model.NoteItemEntrance;
-import com.warehouse.model.Supplier;
+import com.warehouse.model.*;
+import com.warehouse.model.enums.RequisitionEnum;
 import com.warehouse.service.auxiliers.TabulateAuxilier;
 import com.warehouse.service.auxiliers.ValidationAuxilier;
 import com.warehouse.view.messages.WarnMessages;
@@ -27,6 +25,7 @@ public class MainView {
                 | 4- Create Material Requisition                 |
                 | 5- Attend Requisition                          |
                 | 6- Cancel Requisition                          |
+                | 0- Exit                                        |
                 +------------------------------------------------+
                 """);
         System.out.print("-> ");
@@ -98,6 +97,40 @@ public class MainView {
         String addMore = scan.nextLine();
 
         return addMore.equalsIgnoreCase("y");
+    }
+
+    public Requisition callForRequisition(){
+        WarnMessages.printCaseBufferNotWorking();
+        scan.nextLine();
+
+        System.out.print("\nWhat session is requesting the material?\n-> ");
+        String session = scan.nextLine();
+
+        return new Requisition(session,
+                              Date.valueOf(LocalDate.now()),
+                              RequisitionEnum.PENDENT);
+    }
+
+    public RequisitionItem requestItems(List<Material> materials){
+        TabulateAuxilier.tabulateMaterials(materials);
+        System.out.print("\nChoose which material you need on your requisition\n-> ");
+        String materialId = scan.nextLine();
+
+        System.out.print("How many would you like?\n-> ");
+        String amount = scan.nextLine();
+
+        return new RequisitionItem(ValidationAuxilier.parseInt(materialId),
+                                   ValidationAuxilier.parseDouble(amount));
+    }
+
+    public int attendRequisition(List<Requisition> requisitions){
+        WarnMessages.printCaseBufferNotWorking();
+        scan.nextLine();
+
+        TabulateAuxilier.tabulateRequisitions(requisitions);
+        System.out.print("\nChoose which requisition you want to attend / cancel\n-> ");
+
+        return ValidationAuxilier.parseInt(scan.nextLine());
     }
 
 }

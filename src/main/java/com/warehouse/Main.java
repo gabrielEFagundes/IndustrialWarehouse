@@ -17,12 +17,13 @@ public class Main {
 
                 service.mainService(choice);
 
-            }catch(SQLException _){ }
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
             /*
             <summary>
-                The '_' is just because I won't really do anything with that exception, so I don't really
-                need to name it
-            </summary
+                Actually I'll be using the exception for debugging
+            </summary>
              */
         }
 

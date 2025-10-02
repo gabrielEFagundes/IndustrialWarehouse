@@ -1,6 +1,7 @@
 package com.warehouse.service.auxiliers;
 
 import com.warehouse.model.Material;
+import com.warehouse.model.Requisition;
 import com.warehouse.model.Supplier;
 
 import java.util.List;
@@ -26,6 +27,17 @@ public class TabulateAuxilier {
                         Material.getId(), Material.getName(), Material.getMeasurement(), Material.getStorage()));
 
         System.out.println("\n+------------+----------------------+----------------------+------------+");
+    }
+
+    public static void tabulateRequisitions(List<Requisition> r){
+        System.out.println("\n+------------+----------------------+----------------------+-----------------+");
+        System.out.printf("| %-10s | %-20s | %-20s |\n", "ID", "Session", "Sol. Date");
+
+        r.forEach(Requisition ->
+            System.out.printf("| %-10d | %-20s | %-20s |",
+                    Requisition.getId(), Requisition.getSession(), Requisition.getSolicitationDate()));
+
+        System.out.println("\n+------------+----------------------+----------------------+-----------------+");
     }
 
 }

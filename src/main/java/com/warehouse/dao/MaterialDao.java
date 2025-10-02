@@ -77,4 +77,47 @@ public class MaterialDao {
         return materials;
     }
 
+    public double getMaterialStorage(int id) throws SQLException{
+        String query = "SELECT storage FROM material WHERE id = ?";
+
+        try(Connection conn = Connectate.begin();
+            var stmt = conn.prepareStatement(query)){
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                return rs.getDouble("storage");
+            }
+
+            return -1;
+
+        }
+    }
+
+    public void updateStorage(double amount, int id) throws SQLException {
+        String query = "UPDATE material SET storage = storage - ? WHERE id = ?";
+
+        Connection conn = Connectate.begin();
+        try(var stmt = conn.prepareStatement(query)){
+            conn.setAutoCommit(false);
+
+            stmt.setDouble(1, amount);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+
+            conn.commit();
+            SuccessMessages.successfulConnection();
+
+        }catch (SQLException e){
+            conn.rollback();
+            conn.close();
+            ErrorMessages.cannotConnect();
+
+        }finally{
+            conn.close();
+        }
+    }
+
 }

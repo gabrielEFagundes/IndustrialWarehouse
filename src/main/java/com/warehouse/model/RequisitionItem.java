@@ -12,6 +12,11 @@ public class RequisitionItem {
         this.amount = amount;
     }
 
+    public RequisitionItem(int idMaterial, double amount) {
+        this.idMaterial = idMaterial;
+        this.amount = amount;
+    }
+
     public int getIdRequisition() {
         return idRequisition;
     }

@@ -1,13 +1,7 @@
 package com.warehouse.service;
 
-import com.warehouse.dao.MaterialDao;
-import com.warehouse.dao.NoteEntranceDao;
-import com.warehouse.dao.NoteItemEntranceDao;
-import com.warehouse.dao.SupplierDao;
-import com.warehouse.model.Material;
-import com.warehouse.model.NoteEntrance;
-import com.warehouse.model.NoteItemEntrance;
-import com.warehouse.model.Supplier;
+import com.warehouse.dao.*;
+import com.warehouse.model.*;
 import com.warehouse.service.auxiliers.ValidationAuxilier;
 import com.warehouse.view.messages.ErrorMessages;
 import com.warehouse.view.MainView;
@@ -23,6 +17,10 @@ public class MainService {
     MaterialDao materialDao = new MaterialDao();
     NoteEntranceDao noteEntranceDao = new NoteEntranceDao();
     NoteItemEntranceDao noteItemEntranceDao = new NoteItemEntranceDao();
+    RequisitionDao requisitionDao = new RequisitionDao();
+    RequisitionItemDao requisitionItemDao = new RequisitionItemDao();
+
+    int counter = 0;
 
     public void mainService(int choice) throws SQLException {
         switch (choice){
@@ -51,27 +49,49 @@ public class MainService {
 
                 NoteEntrance noteEntrance = view.signEntranceNote(suppliers);
                 noteEntranceDao.signNoteEntrance(noteEntrance);
+                int entranceId = noteEntranceDao.getEntranceNoteId(noteEntrance.getIdSupplier()); // also not the best, but will do
 
                 boolean isStillSigning = true;
 
-                while(isStillSigning){
-                    NoteItemEntrance noteItemEntrance = view.signNoteItemEntrance(materials, noteEntrance.getId());
+                while (isStillSigning) {
+                    NoteItemEntrance noteItemEntrance = view.signNoteItemEntrance(materials, entranceId);
                     noteItemEntranceDao.signNoteItemEntrace(noteItemEntrance);
 
-                    if(!view.askToAddMore()){
+                    if (!view.askToAddMore()) {
                         isStillSigning = false;
                     }
                 }
             }
             case 4 -> {
+                List<Material> materials = materialDao.allMaterials();
 
+                Requisition requisition = view.callForRequisition();
+                requisitionDao.callRequisition(requisition);
+                counter++; // will do IF the code is run once
+
+                RequisitionItem requisitionItem = view.requestItems(materials);
+                double materialStorage = materialDao.getMaterialStorage(requisitionItem.getIdMaterial());
+
+                if(ValidationAuxilier.isStorageGreaterThanAmount(materialStorage, requisitionItem.getAmount()))
+                    requisitionItemDao.signRequisitionItems(requisitionItem.getIdMaterial(), counter, requisitionItem.getAmount());
             }
             case 5 -> {
+                List<Requisition> requisitions = requisitionDao.pendentRequisitions();
 
+                int idReq = view.attendRequisition(requisitions);
+                int idMat = requisitionItemDao.getMaterialId(idReq);
+                double amount = requisitionItemDao.getAmount(idReq);
+
+                requisitionDao.updateStatusToAttended(idReq);
+                materialDao.updateStorage(amount, idMat);
             }
             case 6 -> {
+                List<Requisition> requisitions = requisitionDao.allRequisitions();
 
+                int idReq = view.attendRequisition(requisitions);
+                requisitionDao.updateStatusToCancelled(idReq);
             }
+            case 0 -> { System.exit(0); }
             default -> ErrorMessages.defaultError();
         }
     }

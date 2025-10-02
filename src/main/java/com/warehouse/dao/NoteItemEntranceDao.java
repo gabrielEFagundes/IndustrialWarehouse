@@ -29,6 +29,7 @@ public class NoteItemEntranceDao {
             conn.rollback();
             conn.close();
             ErrorMessages.cannotConnect();
+            e.printStackTrace();
 
         }finally {
             conn.close();

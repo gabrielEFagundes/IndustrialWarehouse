@@ -24,6 +24,12 @@ public class Requisition {
         this.status = status;
     }
 
+    public Requisition(int id, String session, Date solicitationDate) {
+        this.id = id;
+        this.session = session;
+        this.solicitationDate = solicitationDate;
+    }
+
     public int getId() {
         return id;
     }

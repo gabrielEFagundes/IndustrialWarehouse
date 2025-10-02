@@ -7,6 +7,7 @@ import com.warehouse.view.messages.SuccessMessages;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NoteEntranceDao {
@@ -35,16 +36,23 @@ public class NoteEntranceDao {
         }
     }
 
-    /*
-        I'm still not sure if I could change this DB requisition to something I already have on the code,
-        so - TODO: maybe soon make it so I don't need this method
+    public int getEntranceNoteId(int idSupplier) throws SQLException{
+        String query = "SELECT id FROM noteEntrance WHERE idSupplier = ?";
 
-        this is pretty much the only thing I should really change
-     */
-    public int getEntranceNoteId(String idSupplier, Date dateEntrance){
-        String query = "SELECT id FROM noteEntrance WHERE idSupplier = ? AND dateEntrance = ?";
+        try(Connection conn = Connectate.begin();
+            var stmt = conn.prepareStatement(query)){
 
-        // TODO: finish this
+            stmt.setInt(1, idSupplier);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return rs.getInt("id");
+            }
+
+            return -1;
+
+        }
     }
 
 }
