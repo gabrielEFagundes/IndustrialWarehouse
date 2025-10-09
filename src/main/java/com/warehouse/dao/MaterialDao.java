@@ -120,4 +120,17 @@ public class MaterialDao {
         }
     }
 
+    public List<Material> filter15Ids(List<Integer> values, String in, int amountToFilter) throws SQLException{
+        String query = "SELECT id, nome FROM material " + in;
+
+        try(Connection conn = Connectate.begin();
+            var stmt = conn.prepareStatement(query)){
+
+            for(int i = 0; i < amountToFilter; i++){
+                stmt.setInt(i, values.get(i));
+            }
+
+        }
+    }
+
 }

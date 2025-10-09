@@ -8,6 +8,7 @@ import com.warehouse.view.messages.WarnMessages;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,6 +27,7 @@ public class MainView {
                 | 5- Attend Requisition                          |
                 | 6- Cancel Requisition                          |
                 | 0- Exit                                        |
+                | 10- Filter 15 material IDs with Names         |
                 +------------------------------------------------+
                 """);
         System.out.print("-> ");
@@ -131,6 +133,26 @@ public class MainView {
         System.out.print("\nChoose which requisition you want to attend / cancel\n-> ");
 
         return ValidationAuxilier.parseInt(scan.nextLine());
+    }
+
+    public int filterIds(){
+        WarnMessages.printCaseBufferNotWorking();
+        scan.nextLine();
+
+        System.out.print("\nHow many IDs would you like to add?\n-> ");
+        String amountIds = scan.nextLine();
+
+        return ValidationAuxilier.parseInt(amountIds);
+    }
+
+    public List<Integer> addIdToFilter(int amount){
+        List<Integer> ids = new ArrayList<>();
+
+        for(int i = 0; i < amount; i++){
+            System.out.print("\nId to add\n-> ");
+            ids.add(scan.nextInt());
+        }
+        return ids;
     }
 
 }

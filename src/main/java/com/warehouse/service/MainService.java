@@ -2,6 +2,7 @@ package com.warehouse.service;
 
 import com.warehouse.dao.*;
 import com.warehouse.model.*;
+import com.warehouse.service.auxiliers.InGenerator;
 import com.warehouse.service.auxiliers.ValidationAuxilier;
 import com.warehouse.view.messages.ErrorMessages;
 import com.warehouse.view.MainView;
@@ -90,6 +91,12 @@ public class MainService {
 
                 int idReq = view.attendRequisition(requisitions);
                 requisitionDao.updateStatusToCancelled(idReq);
+            }
+            case 10 -> {
+                int amountToFilter = view.filterIds();
+                List<Integer> ids = view.addIdToFilter(amountToFilter);
+                String buildedIn = InGenerator.genIn(ids, amountToFilter);
+
             }
             case 0 -> { System.exit(0); }
             default -> ErrorMessages.defaultError();
